@@ -38,13 +38,15 @@ body {
 }
 
 #cursor {
-  width: 42px;
-  height: 42px;
+  width: 22px;
+  height: 22px;
   margin: 2px;
   border: 2px solid #fff;
   border-radius: 50%;
   position: absolute;
   animation: animCursor 0.8s infinite alternate;
+  // transition: left 0.1s;
+
   z-index: 999 * 999 * 999 * 999;
   pointer-events: none;
   // transition: all 0.2s;
@@ -58,6 +60,7 @@ body {
     background: #fff;
     border-radius: 50%;
     position: absolute;
+    transition: all 0.2s;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -136,25 +139,28 @@ body {
   }
   &__switch {
     position: relative;
+    width: 312px;
     border: 2px solid rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
     color: #fff;
     padding: 4px 5px;
+    padding-left: 8px;
 
     border-radius: 34px;
 
     .wrp {
       position: relative;
       // width: calc(100% - 68px);
-      width: 100%;
-      padding: 20px 34px;
+      // width: 100%;
+      padding: 20px 0 20px 2px;
+      text-align: right;
     }
 
     .switcher {
       position: absolute;
       left: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 0;
+      // transform: translateY(-50%);
       width: 46px;
       height: 46px;
       border: 6px solid rgba(255, 255, 255, 0.8);
@@ -178,11 +184,36 @@ body {
 
     p {
       font-weight: 300;
+
+      display: inline-block;
       margin: 0;
       font-size: 16px;
       letter-spacing: 3px;
       font-family: montserrat;
-      padding-left: 45px;
+      // padding-left: 45px;
+      padding-right: 40px;
     }
+  }
+}
+
+// #scene-one {
+//   top: 0 !important;
+// }
+
+.video {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__wrp {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  &__bg {
+    width: 100%;
+    min-height: 100vh;
+    background-color: goldenrod;
   }
 }
