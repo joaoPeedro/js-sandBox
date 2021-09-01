@@ -210,10 +210,11 @@ body {
     height: 200px;
     overflow: hidden;
     border-radius: 50%;
+    box-shadow: rgb(37 109 136 / 14%) 6px -1px 60px 20px;
   }
   &__bg {
     width: 100%;
     min-height: 100vh;
-    background-color: goldenrod;
+    // background-color: goldenrod;
   }
 }

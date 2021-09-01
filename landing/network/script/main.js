@@ -131,6 +131,8 @@ const switcherDraggable = Draggable.create(switcher, {
 //   markers: true,
 // });
 
+// ScrollTrigger.refresh()
+
 // simple
 // gsap.to(".text-one__ente-que-e-r", {
 //   scrollTrigger: {
