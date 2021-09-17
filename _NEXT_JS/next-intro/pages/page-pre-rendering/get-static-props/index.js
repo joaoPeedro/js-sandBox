@@ -5,7 +5,7 @@ import Head from "next/head";
 import path from "path";
 
 const index = (props) => {
-  const { products } = props;
+  const {products} = props;
   return (
     <>
       <Head>
@@ -28,6 +28,7 @@ const index = (props) => {
   );
 };
 
+// podia ser um fetch aqui
 const getData = async () => {
   // cwd: corrent working directory
   const filePath = path.join(
