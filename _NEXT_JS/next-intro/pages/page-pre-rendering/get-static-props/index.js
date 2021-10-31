@@ -1,12 +1,17 @@
 //file system acess
 import fs from "fs";
 import Link from "next/link";
+import Head from "next/head";
 import path from "path";
 
 const index = (props) => {
   const { products } = props;
   return (
     <>
+      <Head>
+        <title>{product.title}</title>
+        <meta name="description" content={product.title} />
+      </Head>
       <h2>products</h2>
       <ul>
         {products.map((product) => (

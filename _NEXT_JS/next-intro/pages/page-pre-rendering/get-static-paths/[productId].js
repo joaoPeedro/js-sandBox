@@ -2,6 +2,7 @@ import { Fragment } from "react";
 //file system acess
 import fs from "fs";
 import path from "path";
+import Head from "next/head";
 
 const ProductDetailPage = (props) => {
   const { loadedProduct } = props;
@@ -12,6 +13,10 @@ const ProductDetailPage = (props) => {
 
   return (
     <Fragment>
+      <Head>
+        <title>{loadedProduct.title}</title>
+        <meta name="description" content={loadedProduct.description} />
+      </Head>
       <h1>{loadedProduct.title}</h1>
       <h6>Description</h6>
       <p>{loadedProduct.description}</p>
