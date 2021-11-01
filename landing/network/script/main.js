@@ -142,7 +142,7 @@ const switcherDraggable = Draggable.create(switcher, {
 //     // actions: 1º - elementTriggerPoint 2º - scroller-star
 //     start: "290 center",
 //     // the same of start
-//     end: "+=250", // precisamente 300px depois do elemento
+//     end: "+=250", // precisamente 250px depois do elemento
 //     // keys: play, resume, reverse, restart, reset, complete, none
 //     // actions: 1º - enterOnViewport 2º - passTheEndPoint 3º - backIn 4º - allTheWayBack
 //     toggleActions: "restart none none none",
