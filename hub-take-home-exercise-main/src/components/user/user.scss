@@ -1,0 +1,102 @@
+@import "../../styles/vars.scss";
+
+.user-list-container {
+  .row {
+    margin: 60px 0 10px;
+    padding: 20px 20px 5px;
+    display: flex;
+    background-color: $color-1;
+    cursor: pointer;
+    align-items: center;
+
+    picture {
+      margin-top: -40px;
+    }
+
+    .info {
+      margin: 20px;
+      display: flex;
+      flex-flow: column;
+      flex-grow: 1;
+    }
+
+    .icon-right {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: right;
+      margin-top: -10px;
+    }
+
+    &:hover {
+      .icon-right {
+        color: $color-3;
+      }
+    }
+  }
+}
+
+.user-detail {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+
+  .bg {
+    background-color: #fff;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    transition: all 0.4s;
+  }
+
+  picture {
+    opacity: 0;
+    z-index: 999;
+    position: absolute;
+    background-color: $color-4;
+    height: 100px;
+    width: 100px;
+
+    &.animate > img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .info {
+    opacity: 0;
+    transition: all 0.8s;
+    margin-top: 200px;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    > div {
+      padding-left: 480px !important;
+    }
+
+    .content {
+      padding: 40px;
+      background-color: $color-1;
+      flex-grow: 1;
+      max-height: 100%;
+    }
+  }
+
+  .icon-close {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    cursor: pointer;
+    font-weight: 600;
+
+    &:hover {
+      color: $color-3;
+    }
+  }
+}
