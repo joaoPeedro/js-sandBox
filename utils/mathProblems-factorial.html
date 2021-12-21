@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>MathCode.net</title>  
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+    </head>
+    <body>
+        <br/>
+        <div class="container">
+            <h2>Solve Math Problems with JavaScript</h2>
+            | <a href="http://mathcode.net">MathCode</a> | <a href="http://pluralsight.com">Pluralsight</a> | <a href="http://mathcode.net/template.txt">Template</a> | 
+            <hr>
+            <!-- html code here -->
+            <h3>Factorial</h3>
+            <input type="text" id="input1" value="2">
+            <input type="submit" id="submitButton" value=" Go"/>
+            <br/><br/>
+            <div id="details" ></div>
+        </div>
+
+        <script type=text/javascript>
+           "use strict";
+           
+            $(document).ready(function () {
+                // function code goes here
+                $('#submitButton').click(function () {
+                    // JavaScript code here
+                    let factorial = 1;
+                    let x = parseFloat( document.querySelector("#input1").value) ;
+                    
+                    if (x <= 0) {
+                        alert("X must be greater than zero")
+                        factorial = "N/A"
+                    }
+                    while (x > 1) {
+                        factorial = factorial * x;
+                        x--
+                    }
+
+                    $('#details').html("the factorial is: " + factorial);                   
+                });
+            });
+        </script>
+
+    </body>
+</html>
