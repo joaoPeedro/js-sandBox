@@ -6,7 +6,7 @@
  * such as cineme, formed from iceman.
  */
 
-const validAnagramm = (firstString, secondString) => {
+const validAnagram = (firstString, secondString) => {
   console.log(firstString.length, secondString.length);
   if (firstString.length !== secondString.length) {
     console.log("já foste");
@@ -16,7 +16,7 @@ const validAnagramm = (firstString, secondString) => {
   let lookup = {};
 
   for (const letter of firstString) {
-    // if lette existes, increment, otherwise set to 1
+    // if letter exists, increment, otherwise set to 1
     lookup[letter] ? (lookup[letter] += 1) : (lookup[letter] = 1);
   }
 
@@ -34,4 +34,4 @@ const validAnagramm = (firstString, secondString) => {
   return true;
 };
 
-validAnagramm("TEST", "TSET");
+validAnagram("TEST", "TSET");

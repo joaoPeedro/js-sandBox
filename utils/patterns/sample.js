@@ -20,12 +20,12 @@ const charCount = (str) => {
     }
   }
 
-  console.log({ objToReturn });
+  console.log({objToReturn});
   // return obj at end
   return objToReturn;
 };
 
-// depending of browser RG are not very efficient
+// depending of browser regular Expressions are not very efficient
 const charCount2 = (str) => {
   // make obj to return at end
   let objToReturn = {};
@@ -34,7 +34,7 @@ const charCount2 = (str) => {
 
   for (let char of str) {
     // if the char is a number/letter AND is a key in obj, add one to count
-    if (isAlphanomeric(char)) {
+    if (isAlphanumeric(char)) {
       char = char.toLowerCase();
 
       // if the char is a number/letter AND not in obj, add it and set value to 1
@@ -45,12 +45,12 @@ const charCount2 = (str) => {
     }
   }
 
-  console.log({ objToReturn });
+  console.log({objToReturn});
   // return obj at end
   return objToReturn;
 };
 
-const isAlphanomeric = (char) => {
+const isAlphanumeric = (char) => {
   code = char.charCodeAt(0);
 
   if (
