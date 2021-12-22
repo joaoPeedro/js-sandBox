@@ -3,12 +3,12 @@
  */
 
 const items = [
-  { name: "Edward", value: 21 },
-  { name: "Sharpe", value: 37 },
-  { name: "And", value: 45 },
-  { name: "The", value: -12 },
-  { name: "Magnetic", value: 13 },
-  { name: "Zeros", value: 37 },
+  {name: "Edward", value: 21},
+  {name: "Sharpe", value: 37},
+  {name: "And", value: 45},
+  {name: "The", value: -12},
+  {name: "Magnetic", value: 13},
+  {name: "Zeros", value: 37},
 ];
 
 const sortByName = items.sort(function (a, b) {
@@ -60,3 +60,47 @@ timerSetInterval = setInterval(() => {
     clearInterval(timerSetInterval);
   }
 }, 1000);
+
+/**
+ * Functions that returns methods
+ */
+
+function test() {
+  let array = [];
+  var obj = {
+    add: (item) => (array = [...array, item]),
+    remove: (item) => delete array[array.findIndex((str) => str === item)],
+    getList: () => array.toString(),
+  };
+
+  return obj;
+}
+
+function test2() {
+  let array = [];
+  var obj = {
+    add: (item) => (array = [...array, item]),
+    remove: (item) =>
+      array.splice(
+        array.findIndex((str) => str === item),
+        1
+      ),
+    getList: () => array.toString(),
+  };
+
+  return obj;
+}
+
+let obj = test();
+obj.add("batatas");
+obj.add("cenas");
+obj.add("coisas");
+obj.remove("batatas");
+console.log(obj.getList());
+
+let obj2 = test2();
+obj2.add("batatas");
+obj2.add("cenas");
+obj2.add("coisas");
+obj2.remove("batatas");
+console.log(obj2.getList());
