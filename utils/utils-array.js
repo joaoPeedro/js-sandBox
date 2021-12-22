@@ -4,6 +4,7 @@
 
 let testArray = ["cena1", "cena2", "cena3", "cena4", "cena5", "cena6", "cena7"];
 let returnVal;
+
 console.log({testArray});
 
 testArray = ["cena-1", "cena0", ...testArray, "cena8"];

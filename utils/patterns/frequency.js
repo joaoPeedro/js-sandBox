@@ -17,7 +17,8 @@ const validAnagram = (firstString, secondString) => {
 
   for (const letter of firstString) {
     // if letter exists, increment, otherwise set to 1
-    lookup[letter] ? (lookup[letter] += 1) : (lookup[letter] = 1);
+    // lookup[letter] ? (lookup[letter] += 1) : (lookup[letter] = 1);
+    lookup[letter] = ++lookup[letter] || 1;
   }
 
   console.log(lookup);
@@ -28,7 +29,8 @@ const validAnagram = (firstString, secondString) => {
       return false;
     }
 
-    lookup[letter] -= 1;
+    // lookup[letter] -= 1;
+    --lookup[letter];
   }
   console.log(lookup);
   return true;

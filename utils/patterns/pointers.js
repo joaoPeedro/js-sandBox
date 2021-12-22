@@ -1,18 +1,70 @@
 /**
- * Write a function wich takes in a string and return conts of each character in the string
+ * Write a function called sumZero wich accepsts a sorted Array of integers.
+ * The function should find the first pair where the sum is 0.
+ * Return an array that includes both values that sum to zero or undefined if
+ * a pair does not exist
  */
 
-const charCount = (str) => {
-  // make obj to return at end
-  let objToReturn = {};
+const sumZero = (arr) => {
+  let left = 0;
+  let right = arr.length - 1;
 
-  // loop over string for each character
-  // if the char is a number/letter AND is a key in obj, add one to count
-  // if the char is a number/letter AND not in obj, add it and set value to 1
-  // if a char is something else (space, period, etc) don't do anything.
+  console.log("init array", arr);
 
-  // return obj at end
-  return objToReturn;
+  while (left < right) {
+    let sum = arr[left] + arr[right];
+    if (sum === 0) {
+      return console.log([arr[left], arr[right]]);
+    } else if (sum > 0) {
+      --right;
+    } else {
+      ++left;
+    }
+  }
+
+  return console.log("undefined");
 };
 
-charCount("aabbcc");
+console.log("SUMZERO");
+sumZero([-3, -2, -1, 0, 1, 2, 3]);
+sumZero([-2, 0, 1, 3]);
+sumZero([1, 2, 3]);
+
+/**
+ * Implement a function called countUniqueValues,
+ * which accepts a sorted array, and counts the unique
+ * values in the array. There can be negative numbers in
+ * the array, but it will always be sorted.
+ */
+
+/**
+ ** I
+ * [1,1,1,2,3,4,4,4,5]
+ **     J
+ *
+ **   I
+ * [1,2,1,2,3,4,4,4,5]
+ **       J
+ */
+
+const countUniqueValues = (arr) => {
+  if (arr.length === 0) {
+    return 0;
+  }
+  arr.sort();
+  let i = 0;
+
+  for (let j = 0; j < arr.length; j++) {
+    if (arr[i] !== arr[j]) {
+      i++;
+      arr[i] = arr[j];
+    }
+    console.log({i, j});
+  }
+
+  console.log("NumberOfuniqueValues", i);
+  console.log("uniqueValues", arr.splice(0, i));
+};
+
+console.log("COUNT_UNIQUE_VQLUES");
+countUniqueValues([1, 2, 1, 3, 4, 2, 3, 4, 5, 4, 3, 6, 5, 6, 3, 5, 4]);
