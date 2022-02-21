@@ -4,13 +4,12 @@ import Link from "next/link";
 import Head from "next/head";
 import path from "path";
 
-const index = (props) => {
-  const {products} = props;
+const index = ({ products }) => {
   return (
     <>
       <Head>
-        <title>{product.title}</title>
-        <meta name="description" content={product.title} />
+        <title>{products.title}</title>
+        <meta name="description" content={products.title} />
       </Head>
       <h2>products</h2>
       <ul>
