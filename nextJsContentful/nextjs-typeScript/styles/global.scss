@@ -1,11 +1,15 @@
 :root {
   --color-l1: #ff0;
-  --color-l2: #ff0;
+  --color-l2: rgb(229, 212, 22);
   --color-l3: #f3f4e9;
 
   --color-grey-light: #fff;
-  --color-grey-l1: #f4f4f4;
-  --color-grey-dark: rgb(55, 55, 46);
+  --color-grey-l1: #efecec86;
+  --color-grey-l2: #d9d8d8;
+  --color-grey-l3: #c6c6c6;
+  --color-grey-l4: #b2b2b2;
+  --color-grey-l5: #6f6f6f;
+  --color-grey-dark: #37372e;
 }
 
 html,
@@ -35,3 +39,6 @@ img {
   max-width: 100%;
   display: block;
 }
+
+@import "./colors";
+@import "./typography.scss";

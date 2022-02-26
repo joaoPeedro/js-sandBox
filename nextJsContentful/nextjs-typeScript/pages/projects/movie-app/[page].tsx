@@ -1,19 +1,17 @@
 import React from "react";
-import Head from "next/head";
-import MovieApp from "../../../components/projects/movie-app/MovieApp";
+import type { ReactElement } from "react";
 
-const index = ({ movies }) => {
+import MovieApp from "../../../components/projects/movie-app/MovieApp";
+import Layout from "../../../components/projects/movie-app/Layout";
+
+const PageMovies = ({ movies }) => {
   console.log({ movies });
 
-  return (
-    <>
-      <Head>
-        <title>SlowCode - MovieApp</title>
-        <meta name="description" content="project to list movies" />
-      </Head>
-      {!movies ? <h3>LOADING...</h3> : <MovieApp movies={movies} />}
-    </>
-  );
+  return <>{!movies ? <h3>LOADING...</h3> : <MovieApp movies={movies} />}</>;
+};
+
+PageMovies.getLayout = function getLayout(page: ReactElement) {
+  return <Layout> {page}</Layout>;
 };
 
 export const getStaticPaths = async () => {
@@ -56,4 +54,4 @@ export async function getStaticProps(context) {
   };
 }
 
-export default index;
+export default PageMovies;

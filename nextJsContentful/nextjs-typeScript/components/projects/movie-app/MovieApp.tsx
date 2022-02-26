@@ -18,6 +18,7 @@ const MovieApp = ({
       adult: Boolean;
       gender_ids: number[];
       id: number;
+      vote_average: number;
     }[];
     total_pages: number;
     total_results: number;
@@ -28,17 +29,14 @@ const MovieApp = ({
 
   return (
     <>
-      <section className={styles.main}>
-        <Header></Header>
-        <section>
-          {movies.results.map((movie) => (
-            <React.Fragment key={movie.id}>
-              <MovieItem {...movie} />
-            </React.Fragment>
-          ))}
+      <section className={styles.movies_container}>
+        {movies.results.map((movie) => (
+          <React.Fragment key={movie.id}>
+            <MovieItem {...movie} />
+          </React.Fragment>
+        ))}
 
-          {children}
-        </section>
+        {children}
       </section>
     </>
   );
