@@ -29,10 +29,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/optimize-next-app": [
+    "/page-pre-rendering/get-static-paths/[productId]": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/optimize-next-app.js"
+      "static/chunks/pages/page-pre-rendering/get-static-paths/[productId].js"
     ]
   },
   "ampFirstPages": []
