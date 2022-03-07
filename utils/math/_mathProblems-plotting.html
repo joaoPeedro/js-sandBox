@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>MathCode.net</title>  
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+    </head>
+    <body>
+        <br/>
+        <div class="container">
+            <h2>Solve Math Problems with JavaScript</h2>
+            | <a href="http://mathcode.net">MathCode</a> | <a href="http://pluralsight.com">Pluralsight</a> | <a href="http://mathcode.net/template.txt">Template</a> | 
+            <hr>
+            <!-- html code here -->
+            <h3>Plot polynomial</h3>
+            <p>Enter a,b,c,d coefficients: y=ax^3 + bx^2 + cx + d</p>
+            a: <input type="text" value="0" id="a" size="1"/>
+            b: <input type="text" value="1" id="b" size="1"/>
+            c: <input type="text" value="0" id="c" size="1"/>
+            d: <input type="text" value="0" id="d" size="1"/>
+            <br />
+            start: <input type="text" value="-5" id="start" size="1"/>
+            end: <input type="text" value="5" id="end" size="1"/>
+            inc: <input type="text" value="1" id="inc" size="1"/>
+            <input type="submit" id="submitButton" value=" Build table"/>
+            <br/><br/>
+            <div id="details" ></div>
+        </div>
+
+        <script type=text/javascript>
+           "use strict";
+           /**
+            * polynomial
+            * (3and order Polynomial)
+            * y = ax^3 + bx^2 + cx + d 
+           */
+
+           let x = 0; 
+           let y = 0;
+
+           let a = 0, b= 1,c = 0, d=0;
+           let startBound = -5;
+           let endBound = 5;
+           let increments;
+
+           let htmlToRender = "";
+
+            $(document).ready(function () {
+                // function code goes here
+                const getY = (x) => {
+                    return a * x * x * x + b *x *x + c*x +d
+                }
+                $('#submitButton').click(function () {
+                    // JavaScript code here
+                    a = parseFloat($("#a").val());
+                    b = parseFloat($("#b").val());
+                    c = parseFloat($("#c").val());
+                    d = parseFloat($("#d").val());
+                    startBound = parseFloat($("#start").val());
+                    endBound = parseFloat($("#end").val());
+                    increments = parseFloat($("#inc").val());
+
+                    htmlToRender = "<table class='table'> <tr><th>X</th><th>Y</th></tr>"
+
+                        x = startBound;
+                    do {
+                        y = getY(x)
+                        htmlToRender = htmlToRender + "<tr>"
+                        htmlToRender = htmlToRender + "<td>"+ x.toFixed(2)+"</td>"
+                        htmlToRender = htmlToRender + "<td>"+ y.toFixed(2)+"</td>"
+                        htmlToRender = htmlToRender + "</tr>"
+
+                        x += increments;
+                    } while (x < endBound);
+
+                    htmlToRender = htmlToRender + "</table>"
+
+                    $('#details').html(htmlToRender);                   
+                });
+            });
+        </script>
+
+    </body>
+</html>
