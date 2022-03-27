@@ -4,7 +4,13 @@ import Head from "next/head";
 
 import styles from "./styles/movie-app.module.scss";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({
+  userNmae,
+  children,
+}: {
+  userNmae: "";
+  children: React.ReactNode;
+}) => {
   return (
     <>
       <Head>

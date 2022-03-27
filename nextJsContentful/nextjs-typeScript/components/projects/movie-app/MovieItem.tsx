@@ -26,6 +26,12 @@ const MovieItem = ({
       (target as HTMLButtonElement).classList.remove(styles.loading_img);
   };
 
+  let dacimalPatern = /\.\d*/g;
+  let vote = vote_average?.toString().replace(dacimalPatern, "");
+  let voteDecimal = vote_average?.toString().match(dacimalPatern)?.join("");
+
+  // console.log({ voteDecimal });
+
   return (
     <article className={styles.movie_item}>
       <div className={styles.content}>
@@ -35,7 +41,10 @@ const MovieItem = ({
         <p>{overview}</p>
       </div>
       <div className={styles.cover}>
-        <span className={`${styles.vote} `}>{vote_average}</span>
+        <span className={`${styles.vote}`}>
+          {vote}
+          <span style={{ fontSize: "0.6em" }}> {voteDecimal}</span>
+        </span>
         <Image
           // src={"https://image.tmdb.org/t/p/w500" + backdrop_path}
           // src={`https://image.tmdb.org/t/p/w500${backdrop_path}`}

@@ -1,18 +1,9 @@
 import React from "react";
 import type { ReactElement } from "react";
+import { createClient } from "contentful";
 
 import MovieApp from "../../../components/projects/movie-app/MovieApp";
 import Layout from "../../../components/projects/movie-app/Layout";
-
-const PageMovies = ({ movies }) => {
-  console.log({ movies });
-
-  return <>{!movies ? <h3>LOADING...</h3> : <MovieApp movies={movies} />}</>;
-};
-
-PageMovies.getLayout = function getLayout(page: ReactElement) {
-  return <Layout> {page}</Layout>;
-};
 
 export const getStaticPaths = async () => {
   return {
@@ -30,11 +21,25 @@ export const getStaticPaths = async () => {
   };
 };
 
+const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID,
+  accessToken: process.env.CONTENTFUL_ACCESS_KEY,
+});
+
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries.
 export async function getStaticProps(context) {
   console.log(context);
+
+  const resClient = await client.getEntries({
+    content_type: "recipe",
+    // "fields.slug": 1, // para ir buscar apenas o item que corresponde a esta slug
+  });
+  console.log({ resClient });
+  const user = (await resClient.items[0].fields?.title) ?? "undefined";
+
+  // const user = await resClient.items[0].json();
 
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
@@ -49,9 +54,20 @@ export async function getStaticProps(context) {
   return {
     props: {
       movies,
+      user,
     },
     revalidate: 60 * 60 * 2,
   };
 }
+
+const PageMovies = ({ user, movies }) => {
+  console.log({ user, movies });
+
+  return <>{!movies ? <h3>LOADING...</h3> : <MovieApp movies={movies} />}</>;
+};
+
+PageMovies.getLayout = function getLayout(page: ReactElement) {
+  return <Layout userNmae={""}> {page}</Layout>;
+};
 
 export default PageMovies;
