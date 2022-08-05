@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .container {
+        display: flex;
+        width: 80%;
+        justify-content: space-between;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      [class*="circle"] {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(128, 128, 128, 0.401);
+        border-radius: 50%;
+        opacity: 1;
+      }
+
+      img {
+        max-height: 80px;
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <img
+        id="img"
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.qzkmFP-i940e5j9nTrPg7AHaHa%26pid%3DApi&amp;f=1"
+      />
+      <div class="circle" style="background-color: green"></div>
+      <div class="circle" style="background-color: greenyellow"></div>
+
+      <div class="circle" style="background-color: goldenrod"></div>
+      <div class="circle" style="background-color: ghostwhite"></div>
+    </section>
+
+    <section class="container">
+      <img
+        style="opacity: 0"
+        id="img-2"
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.qzkmFP-i940e5j9nTrPg7AHaHa%26pid%3DApi&amp;f=1"
+      />
+      <div class="circle-2" style="background-color: green"></div>
+      <div class="circle-2" style="background-color: greenyellow"></div>
+      <div class="circle-2" style="background-color: goldenrod"></div>
+      <div class="circle-2" style="background-color: ghostwhite"></div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/CSSRulePlugin.min.js"></script>
+    <script src="script/app.js"></script>
+  </body>
+</html>
