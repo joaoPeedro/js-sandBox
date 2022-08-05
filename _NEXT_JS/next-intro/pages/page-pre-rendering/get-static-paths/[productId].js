@@ -47,6 +47,7 @@ const getStaticPaths = async () => {
       productId: id,
     },
   }));
+  console.log({ patsWithParams });
   return {
     // shold return an array with path objects
     paths: patsWithParams,
@@ -57,6 +58,7 @@ const getStaticPaths = async () => {
     //true de forma async "bom para criar uma pag de fallback para o user a dizer que está a carregar, para seo n será tão bom"
     //"blocking" - bloqueia o pedido da pag até ter a pag renderizada
     fallback: "blocking", // neste caso o indicado é false pk estamos a gerar todos os paths
+    // fallback: true,
   };
 };
 
