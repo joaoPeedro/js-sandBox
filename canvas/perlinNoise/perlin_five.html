@@ -1,0 +1,361 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PerlinNoise three</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+  <script src=""></script>
+
+  <script>
+    function Force({force, rawWidth, rawHeight, increment, offset}) {
+      this.force = force;
+      this.rawWidth = rawWidth;
+      this.rawHeight = rawHeight;
+      this.increment = increment;
+      this.offset = offset;
+    }
+
+    function BackgroundFluid({canvas, increment, imageData}) {
+      this.rawWidth = canvas.width;
+      this.rawHeight = canvas.width;
+
+      this.ratioWidth = this.rawWidth / canvas.clientWidth;
+      this.ratioHeight = this.rawHeight / canvas.clientHeight;
+      this.increment = increment;
+      this.imageData = imageData;
+      this.area = rawWidth * rawHeight;
+
+      this.velocityGridInit = new Array(this.area * 2).fill(0);
+      this.velocityGridEnd = new Array(this.area * 2).fill(0);
+      this.pressureGridInit = new Array(this.area).fill(0);
+      this.pressureGridEnd = new Array(this.area).fill(0);
+      this.divergenceGrid = new Array(this.area).fill(0);
+
+      this.velocityInitX = (x, y) =>
+        this.applyForce({
+          force: this.velocityGridInit,
+          x,
+          y,
+          increment: 2,
+          offset: 0,
+        });
+      this.velocityEndX = (x, y) =>
+        this.applyForce({
+          force: this.velocityGridEnd,
+          x,
+          y,
+          increment: 2,
+          offset: 0,
+        });
+      this.velocityInitY = (x, y) =>
+        this.applyForce({
+          force: this.velocityGridInit,
+          x,
+          y,
+          increment: 2,
+          offset: 1,
+        });
+      this.velocityEndY = (x, y) =>
+        this.applyForce({
+          force: this.velocityGridEnd,
+          x,
+          y,
+          increment: 2,
+          offset: 1,
+        });
+      this.pressureInit = (x, y) =>
+        this.applyForce({
+          force: this.pressureGridInit,
+          x,
+          y,
+          increment: 1,
+          offset: 1,
+        });
+      this.pressureEnd = (x, y) =>
+        this.applyForce({
+          force: this.pressureGridEnd,
+          x,
+          y,
+          increment: 1,
+          offset: 1,
+        });
+      this.divergence = (x, y) =>
+        this.applyForce({
+          force: this.pressureGridEnd,
+          x,
+          y,
+          increment: 1,
+          offset: 0,
+        });
+      this.increment = increment;
+
+      this.MouseInitX = 279;
+      this.MouseInitY = 279;
+      this.MouseEndX = 279;
+      this.MouseEndY = 279;
+
+      this.memory = {};
+
+      this.applyForce = ({force, x, y, increment, offset}) => {
+        x = (x < 0 ? 0 : x > this.rawWidth - 1 ? this.rawWidth - 1 : x) | 0;
+        y = (y < 0 ? 0 : y > this.rawHeight - 1 ? this.rawHeight - 1 : y) | 0;
+
+        // let valueToReturn;
+
+        // if (value !== undefined) {
+        //   valueToReturn = this.force[
+        //     (x + y * this.rawWidth) * this.increment + this.offset
+        //   ] = value;
+        // } else {
+        // console.log({x, y, valueToReturn, force: this.force});
+
+        return force[(x + y * this.rawWidth) * increment + offset];
+        // }
+
+        // return !valueToReturn ? 0 : valueToReturn;
+        // return
+      };
+
+      this.draw = () => {
+        let pixels = this.imageData.data;
+        // console.log(pixels);
+
+        let logamos = null;
+
+        for (var y = 0; y < this.rawHeight; y++) {
+          for (var x = 0; x < this.rawWidth; x++) {
+            // let index = (x + y * this.rawWidth) * 4;
+            let index = (x + y * this.rawWidth) * 4;
+
+            // let random = Math.random() * 200;
+            // let random = parseInt(perlin.get(xOffset, yOffset) * COLOR_SCALE);
+            // let random = noise(xOffset, yOffset) * COLOR_SCALE;
+
+            pixels[index + 0] = this.velocityInitX(x, y) * 128; // red
+            pixels[index + 1] = this.velocityInitY(x, y) * 255; // green
+            pixels[index + 2] = this.pressureInit(x, y) * 64; // blue
+            pixels[index + 3] = this.pressureInit(x, y) * 255; // alpha
+
+            if (!logamos && x === 35 && y === 5) {
+              logamos = {
+                velocityInitX: this.velocityInitX(x, y),
+                velocityInitY: this.velocityInitY(x, y),
+                pressureInit: this.pressureInit(x, y),
+                calc:
+                  (x < 0 ? 0 : x > this.rawWidth - 1 ? this.rawWidth - 1 : x) |
+                  0,
+                pixels0: pixels[index + 0],
+                pixels1: pixels[index + 1],
+                pixels2: pixels[index + 2],
+                pixels3: pixels[index + 3],
+                cenas: {x, y},
+              };
+
+              console.log(logamos);
+            }
+          }
+        }
+
+        ctx.putImageData(this.imageData, 0, 0);
+      };
+
+      this.update = () => {
+        this.methods.velocityBoundary(this.velocityInitX, this.velocityInitY);
+        this.methods.applyMouseMove();
+        this.methods.calcDivergence();
+        this.methods.jacobi();
+        this.draw();
+      };
+
+      this.methods = {
+        updateMousePosition: ({x, y}) => {
+          this.MouseEndX = x;
+          this.MouseEndY = y;
+          // console.log(this.MouseEndX, this.MouseEndY);
+        },
+        pressureBoundary: () => {
+          for (var x = 0; x < this.rawWidth; x++) {
+            this.pressureInit(x, 0, this.pressureInit(x, 1));
+            this.pressureInit(
+              x,
+              this.rawHeight - 1,
+              this.pressureInit(x, this.rawHeight - 2)
+            );
+          }
+          for (var y = 0; y < this.rawHeight; y++) {
+            this.pressureInit(0, y, this.pressureInit(1, y));
+            this.pressureInit(
+              this.rawWidth - 1,
+              y,
+              this.pressureInit(this.rawWidth - 2, y)
+            );
+          }
+        },
+
+        velocityBoundary: (velocityInitX, velocityInitY) => {
+          for (var x = 0; x < this.rawWidth; x++) {
+            velocityInitX(x, 0, -velocityInitX(x, 1));
+            velocityInitY(x, 0, -velocityInitY(x, 1));
+
+            velocityInitX(
+              x,
+              this.rawHeight - 1,
+              -velocityInitX(x, this.rawHeight - 2)
+            );
+            velocityInitY(
+              x,
+              this.rawHeight - 1,
+              -velocityInitY(x, this.rawHeight - 2)
+            );
+          }
+          for (var y = 0; y < this.rawHeight; y++) {
+            velocityInitX(0, y, -velocityInitX(1, y));
+            velocityInitY(0, y, -velocityInitY(1, y));
+
+            velocityInitX(
+              this.rawWidth - 1,
+              y,
+              -velocityInitX(this.rawWidth - 2, y)
+            );
+            velocityInitY(
+              this.rawWidth - 1,
+              y,
+              -velocityInitY(this.rawWidth - 2, y)
+            );
+          }
+
+          console.log({
+            ux: velocityInitX,
+            uy: velocityInitY,
+          });
+        },
+        jacobi: () => {
+          let alpha = -1;
+          let beta = 0.25;
+          let iterations = 6;
+
+          for (var i = 0; i < this.pressureGridInit.length; i++) {
+            this.pressureGridEnd[i] = this.pressureGridInit[i];
+          }
+
+          for (i = 0; i < iterations; i++) {
+            for (var y = 1; y < this.rawHeight - 1; y++) {
+              for (var x = 1; x < this.rawWidth - 1; x++) {
+                /* var x0 = p0(x - 1, y),
+                  x1 = p0(x + 1, y),
+                  y0 = p0(x, y - 1),
+                  y1 = p0(x, y + 1); */
+                this.pressureEnd(
+                  x,
+                  y,
+                  (this.pressureInit(x - 1, y) +
+                    this.pressureInit(x + 1, y) +
+                    this.pressureInit(x, y - 1) +
+                    this.pressureInit(x, y + 1) +
+                    alpha * this.divergence(x, y)) *
+                    beta
+                );
+              }
+            }
+            // var aux = p0;
+            // p0 = p1;
+            // p1 = aux;
+            this.methods.pressureBoundary(this.pressureEnd);
+          }
+        },
+        applyMouseMove: () => {
+          let x = Math.max(
+            Math.min(this.MouseEndX * this.ratioWidth, 1),
+            this.rawWidth - 2
+          );
+          let y = Math.max(
+            Math.min(this.MouseEndY * this.ratioHeight, 1),
+            this.rawHeight - 2
+          );
+
+          let distX = this.MouseEndX - this.MouseInitX;
+          let distY = this.MouseEndY - this.MouseInitY;
+
+          this.MouseInitX = this.MouseEndX;
+          this.MouseInitY = this.MouseEndY;
+
+          let MouseEffectMultiplier = 6;
+
+          this.velocityEndX(
+            x,
+            y,
+            this.velocityEndX(x, y) - distX * MouseEffectMultiplier
+          );
+          this.velocityEndY(
+            x,
+            y,
+            this.velocityEndY(x, y) - distY * MouseEffectMultiplier
+          );
+
+          console.log({
+            ux: this.velocityEndX(x, y, this.velocityEndX(x, y) - distX * 6),
+            uy: this.velocityEndY(x, y, this.velocityEndY(x, y) - distY * 6),
+          });
+        },
+        calcDivergence: () => {
+          for (var x = 1; x < this.rawWidth - 1; x++) {
+            for (var y = 1; y < this.rawHeight - 1; y++) {
+              this.divergence(
+                x,
+                y,
+                (this.velocityEndX(x + 1, y) -
+                  this.velocityEndX(x - 1, y) +
+                  this.velocityEndY(x, y + 1) -
+                  this.velocityEndY(x, y - 1)) *
+                  0.5
+              );
+            }
+          }
+        },
+      };
+    }
+
+    const canvas = document.getElementById("canvas");
+
+    canvas.width = window.innerWidth / 20;
+    canvas.height = window.innerHeight / 20;
+    const rawWidth = canvas.width;
+    const rawHeight = canvas.height;
+    const increment = 0.1;
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillRect(0, 0, rawWidth, rawHeight);
+    const imageData = ctx.getImageData(0, 0, rawWidth, rawHeight);
+
+    const backgroundFluid = new BackgroundFluid({
+      canvas,
+      increment,
+      imageData,
+    });
+
+    (function animate() {
+      // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // circlesArray.map((circle) => {
+      backgroundFluid.update();
+      // });
+
+      requestAnimationFrame(animate);
+    })();
+
+    window.addEventListener("mousemove", function (e) {
+      backgroundFluid.methods.updateMousePosition({x: e.clientX, y: e.clientY});
+    });
+  </script>
+</html>

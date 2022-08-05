@@ -1,0 +1,533 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PerlinNoise four</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+
+  <script>
+    /* https://mikeash.com/pyblog/fluid-simulation-for-dummies.html */
+
+    function Force(forceGrid, rawWidth, rawHeight, increment, offset) {
+      this.forceGrid = forceGrid;
+      this.rawWidth = rawWidth;
+      this.rawHeight = rawHeight;
+      this.increment = increment;
+      this.offset = offset;
+
+      this.processForce = (x, y, value, log) => {
+        x = (x < 0 ? 0 : x > this.rawWidth - 1 ? this.rawWidth - 1 : x) | 0;
+        y = (y < 0 ? 0 : y > this.rawHeight - 1 ? this.rawHeight - 1 : y) | 0;
+
+        if (log) {
+          console.log(x, y);
+        }
+
+        if (value !== undefined) {
+          navierData[this.forceGrid][
+            (x + y * this.rawWidth) * this.increment + this.offset
+          ] = value;
+          //
+        } else {
+          return navierData[this.forceGrid][
+            (x + y * this.rawWidth) * this.increment + this.offset
+          ];
+        }
+      };
+    }
+
+    let navierData = {
+      MouseInitX: null,
+      MouseInitY: null,
+      MouseEndX: null,
+      MouseEndY: null,
+      velocityGridInit: null,
+      velocityGridEnd: null,
+      pressureGridInit: null,
+      pressureGridEnd: null,
+      divergenceGrid: null,
+      velocityInitX: null,
+      velocityInitY: null,
+      velocityEndX: null,
+      velocityEndY: null,
+      pressureInit: null,
+      pressureEnd: null,
+      divergence: null,
+      imageData: null,
+      advectionMultiplier: 4,
+      mouseEffectMultiplier: 28,
+      divergenceMultiplier: 0.5,
+      jacobiAlpha: -1,
+      jacobiBeta: 0.25,
+      jacobiIterations: 8,
+      gradientDiffuseDivider: 8,
+    };
+    function NavierFluid({canvas, rawWidth, rawHeight, increment, imageData}) {
+      this.rawWidth = rawWidth;
+      this.rawHeight = rawHeight;
+
+      // console.log(
+      //   this.rawWidth,
+      //   this.rawHeight,
+      //   canvas.clientWidth,
+      //   canvas.clientHeight
+      // );
+
+      this.ratioWidth = this.rawWidth / canvas.clientWidth;
+      this.ratioHeight = this.rawHeight / canvas.clientHeight;
+
+      this.increment = increment;
+      navierData.imageData = imageData;
+      this.area = rawWidth * rawHeight;
+
+      navierData.velocityGridInit = new Array(this.area * 2).fill(0);
+      navierData.velocityGridEnd = new Array(this.area * 2).fill(0);
+      navierData.pressureGridInit = new Array(this.area).fill(0);
+      navierData.pressureGridEnd = new Array(this.area).fill(0);
+      navierData.divergenceGrid = new Array(this.area).fill(0);
+
+      navierData.velocityInitX = new Force(
+        "velocityGridInit",
+
+        this.rawWidth,
+
+        this.rawHeight,
+
+        2,
+
+        0
+      );
+      navierData.velocityInitY = new Force(
+        "velocityGridInit",
+        this.rawWidth,
+        this.rawHeight,
+        2,
+        1
+      );
+
+      navierData.velocityEndX = new Force(
+        "velocityGridEnd",
+        this.rawWidth,
+        this.rawHeight,
+        2,
+        0
+      );
+      navierData.velocityEndY = new Force(
+        "velocityGridEnd",
+        this.rawWidth,
+        this.rawHeight,
+        2,
+        1
+      );
+
+      navierData.pressureInit = new Force(
+        "pressureGridInit",
+
+        this.rawWidth,
+
+        this.rawHeight,
+
+        1,
+
+        1
+      );
+      navierData.pressureEnd = new Force(
+        "pressureGridEnd",
+
+        this.rawWidth,
+
+        this.rawHeight,
+
+        1,
+
+        0
+      );
+
+      navierData.divergence = new Force(
+        "divergenceGrid",
+        this.rawWidth,
+        this.rawHeight,
+        1,
+        0
+      );
+      // this.increment = increment;
+
+      navierData.MouseInitX = 0;
+      navierData.MouseInitY = 0;
+      navierData.MouseEndX = navierData.MouseInitX;
+      navierData.MouseEndY = navierData.MouseInitY;
+
+      this.draw = () => {
+        let pixels = navierData.imageData.data;
+        // console.log(pixels);
+
+        // let logamosSenhor = null;
+
+        for (let x = 0; x < this.rawWidth; x++) {
+          for (let y = 0; y < this.rawHeight; y++) {
+            // let index = (x + y * this.rawWidth) * 4;
+            let index = (x + y * this.rawWidth) * 4;
+
+            // let random = Math.random() * 200;
+            // let random = parseInt(perlin.get(xOffset, yOffset) * COLOR_SCALE);
+            // let random = noise(xOffset, yOffset) * COLOR_SCALE;
+
+            pixels[index + 0] =
+              navierData.velocityInitX.processForce(x, y) * 250; // red
+            // pixels[index + 1] = navierData.velocityInitY.processForce( x, y,  }) * 255; // green
+            pixels[index + 2] =
+              navierData.velocityInitY.processForce(x, y) * 120 + 120; // blue
+            pixels[index + 3] =
+              navierData.pressureInit.processForce(x, y) * 100 + 64; // alpha
+
+            // if (x === this.rawWidth - 1 && y === this.rawHeight - 1) {
+            //   // if (
+            //   //   navierData.velocityInitX.processForce(
+            //   //     x,
+            //   //     y,
+            //   //
+            //   //   }) !== 0
+            //   // ) {
+            //   logamosSenhor = {
+            //     velocityInitX: navierData.velocityInitX.processForce(
+            //       x,
+            //       y,
+            //     }),
+            //     velocityInitY: navierData.velocityInitY.processForce(
+            //       x,
+            //       y,
+            //     }),
+            //     pressureInit: navierData.pressureInit.processForce(
+            //       x,
+            //       y,
+            //     }),
+            //     index: index,
+            //     pixels0: pixels[index + 0],
+            //     // pixels1: pixels[index + 1],
+            //     pixels2: pixels[index + 2],
+            //     pixels3: pixels[index + 3],
+            //   };
+
+            //   // console.log({logamosSenhor, pixels, imageData: navierData.imageData});
+            // }
+          }
+        }
+
+        ctx.putImageData(navierData.imageData, 0, 0);
+      };
+
+      this.update = () => {
+        this.methods.advection(
+          navierData.velocityInitX,
+          navierData.velocityEndX
+        );
+        this.methods.advection(
+          navierData.velocityInitY,
+          navierData.velocityEndY
+        );
+        this.methods.applyMouseMove();
+        this.methods.applyDivergence();
+        this.methods.jacobi();
+        this.methods.applyGradientDiffuse();
+
+        let aux = navierData.pressureInit;
+        navierData.pressureInit = navierData.pressureEnd;
+        navierData.pressureEnd = aux;
+        aux = navierData.velocityInitX;
+        navierData.velocityInitX = navierData.velocityEndX;
+        navierData.velocityEndX = aux;
+        aux = navierData.velocityInitY;
+        navierData.velocityInitY = navierData.velocityEndY;
+        navierData.velocityEndY = aux;
+        this.draw();
+      };
+
+      this.methods = {
+        dissipation: (forceInit, valueDirectionX, valueDirectionY) => {
+          const calcDissipation = (valueInit, valueEnd, valueDirection) => {
+            valueDirection < 0
+              ? (valueDirection = 0)
+              : valueDirection > 1
+              ? (valueDirection = 1)
+              : "";
+
+            return valueInit * (1 - valueDirection) + valueEnd * valueDirection;
+          };
+
+          let valueDirectionXFloor = Math.floor(valueDirectionX);
+          let valueDirectionYFloor = Math.floor(valueDirectionY);
+
+          let valueInitX = forceInit.processForce(
+            valueDirectionX,
+            valueDirectionY
+          );
+          let valueInitY = forceInit.processForce(
+            valueDirectionXFloor,
+            valueDirectionYFloor + 1
+          );
+          let valueEndX = forceInit.processForce(
+            valueDirectionXFloor + 1,
+            valueDirectionYFloor
+          );
+          let valueEndY = forceInit.processForce(
+            valueDirectionXFloor + 1,
+            valueDirectionYFloor + 1
+          );
+
+          let valueXDissipation = calcDissipation(
+            valueInitX,
+            valueEndX,
+            valueDirectionX - valueDirectionXFloor
+          );
+          let valueYDissipation = calcDissipation(
+            valueInitY,
+            valueEndY,
+            valueDirectionY - valueDirectionYFloor
+          );
+
+          return calcDissipation(
+            valueXDissipation,
+            valueYDissipation,
+            valueDirectionY - valueDirectionYFloor
+          );
+        },
+        // handles the directional dissipation of the three information grid.
+        advection: (forceInit, forceEnd) => {
+          for (let y = 1; y < this.rawHeight - 1; y++) {
+            for (let x = 1; x < this.rawWidth - 1; x++) {
+              let valueDirectionX =
+                navierData.velocityInitX.processForce(x, y) *
+                navierData.advectionMultiplier;
+              let valueDirectionY =
+                navierData.velocityInitY.processForce(x, y) *
+                navierData.advectionMultiplier;
+
+              let dissipation = this.methods.dissipation(
+                forceInit,
+                x + valueDirectionX,
+                y + valueDirectionY
+              );
+              forceEnd.processForce(x, y, dissipation);
+
+              // if (y === 28 && x === 28) {
+              //   console.log(
+              //     forceEnd.processForce(
+              //       x,
+              //       y,
+              //       value: dissipation(
+              //         forceInit,
+              //         x + valueDirectionX,
+              //         y + valueDirectionY
+              //       ),
+              //     })
+              //   );
+              // }
+            }
+          }
+        },
+        updateMousePosition: (x, y) => {
+          navierData.MouseInitX = x;
+          navierData.MouseInitY = y;
+          // console.log(navierData.MouseEndX, navierData.MouseEndY);
+        },
+        pressureBoundary: () => {
+          for (let x = 0; x < this.rawWidth; x++) {
+            let valueX = navierData.pressureInit.processForce(x, 1);
+            let valueY = navierData.pressureInit.processForce(
+              x,
+              this.rawHeight - 2
+            );
+            navierData.pressureInit.processForce(x, 0, valueX);
+            navierData.pressureInit.processForce(x, this.rawHeight - 1, valueY);
+          }
+          for (let y = 0; y < this.rawHeight; y++) {
+            let valueX = navierData.pressureInit.processForce(1, y);
+            let valueY = navierData.pressureInit.processForce(
+              this.rawWidth - 2,
+              y
+            );
+            navierData.pressureInit.processForce(0, y, valueX);
+            navierData.pressureInit.processForce(this.rawWidth - 1, y, valueY);
+          }
+        },
+        jacobi: () => {
+          for (let i = 0; i < navierData.pressureGridInit.length; i++) {
+            navierData.pressureGridInit[i] =
+              navierData.pressureGridInit[i] > 3 ||
+              navierData.pressureGridInit[i] < -3
+                ? 0.5
+                : navierData.pressureGridInit[i];
+            // navierData.pressureGridInit[i] = 0.8;
+            navierData.pressureGridEnd[i] = navierData.pressureGridInit[i];
+          }
+
+          for (i = 0; i < navierData.jacobiIterations; i++) {
+            for (let y = 1; y < this.rawHeight - 1; y++) {
+              for (let x = 1; x < this.rawWidth - 1; x++) {
+                /* let x0 = p0(x - 1, y),
+                  x1 = p0(x + 1, y),
+                  y0 = p0(x, y - 1),
+                  y1 = p0(x, y + 1); */
+                let valuePressure =
+                  (navierData.pressureInit.processForce(x - 1, y) +
+                    navierData.pressureInit.processForce(x + 1, y) +
+                    navierData.pressureInit.processForce(x, y - 1) +
+                    navierData.pressureInit.processForce(x, y + 1) +
+                    navierData.jacobiAlpha *
+                      navierData.divergence.processForce(x, y)) *
+                  navierData.jacobiBeta;
+
+                // if (y === 24) {
+                //   console.log({valuePressure});
+                // }
+
+                navierData.pressureEnd.processForce(x, y, valuePressure);
+              }
+            }
+            let aux = navierData.pressureInit;
+            navierData.pressureInit = navierData.pressureEnd;
+            navierData.pressureEnd = aux;
+            this.methods.pressureBoundary();
+          }
+        },
+        applyMouseMove: () => {
+          let x = Math.max(
+            Math.min(
+              navierData.MouseInitX * this.ratioWidth,
+              this.rawWidth - 2
+            ),
+            1
+          );
+          let y = Math.max(
+            Math.min(
+              navierData.MouseInitY * this.ratioHeight,
+              this.rawHeight - 2
+            ),
+            1
+          );
+
+          let distX = navierData.MouseInitX - navierData.MouseEndX;
+          let distY = navierData.MouseInitY - navierData.MouseEndY;
+
+          navierData.MouseEndX = navierData.MouseInitX;
+          navierData.MouseEndY = navierData.MouseInitY;
+
+          // if (distX !== 0) {
+          //   console.log(navierData.MouseInitX, navierData.MouseInitY);
+          //   console.log(navierData.MouseEndX, navierData.MouseEndY);
+          // }
+
+          let valueX =
+            navierData.velocityEndX.processForce(x, y) -
+            distX * navierData.mouseEffectMultiplier;
+
+          let valueY =
+            navierData.velocityEndY.processForce(x, y) -
+            distY * navierData.mouseEffectMultiplier;
+
+          navierData.velocityEndX.processForce(x, y, valueX);
+          navierData.velocityEndY.processForce(x, y, valueY);
+        },
+        applyDivergence: () => {
+          for (let x = 1; x < this.rawWidth - 1; x++) {
+            for (let y = 1; y < this.rawHeight - 1; y++) {
+              let valueDiverge =
+                (navierData.velocityEndX.processForce(x + 1, y) -
+                  navierData.velocityEndX.processForce(x - 1, y) +
+                  navierData.velocityEndY.processForce(x, y + 1) -
+                  navierData.velocityEndY.processForce(x, y - 1)) *
+                navierData.divergenceMultiplier;
+
+              // let x0 = navierData.velocityEndX.processForce(x: x - 1, y),
+              //   x1 = navierData.velocityEndX.processForce(x: x + 1, y),
+              //   y0 = navierData.velocityEndY.processForce(x, y: y - 1}),
+              //   y1 = navierData.velocityEndY.processForce(x, y: y + 1});
+
+              navierData.divergence.processForce(x, y, valueDiverge);
+
+              // if (valueDiverge !== 0) {
+              //   console.log(
+              //     "DIVERGE_CALC",
+              //     navierData.divergence.processForce(
+              //       x,
+              //       y,
+              //       value: valueDiverge,
+              //     })
+              //   );
+              // }
+            }
+          }
+        },
+        applyGradientDiffuse: () => {
+          for (let x = 1; x < this.rawWidth - 1; x++) {
+            for (let y = 1; y < this.rawHeight - 1; y++) {
+              let diffuseX =
+                (navierData.pressureInit.processForce(x + 1, y) -
+                  navierData.pressureInit.processForce(x - 1, y)) /
+                navierData.gradientDiffuseDivider;
+              let diffuseY =
+                (navierData.pressureInit.processForce(x, y + 1) -
+                  navierData.pressureInit.processForce(x, y - 1)) /
+                navierData.gradientDiffuseDivider;
+
+              let valueX =
+                navierData.velocityEndX.processForce(x, y) - diffuseX;
+              let valueY =
+                navierData.velocityEndY.processForce(x, y) - diffuseY;
+
+              navierData.velocityEndX.processForce(x, y, valueX);
+              navierData.velocityEndY.processForce(x, y, valueY);
+            }
+          }
+        },
+      };
+    }
+
+    const canvas = document.getElementById("canvas");
+
+    canvas.width = window.innerWidth / 14;
+    canvas.height = window.innerHeight / 14;
+    const rawWidth = canvas.width;
+    const rawHeight = canvas.height;
+    // console.log({rawWidth, rawHeight}, canvas.clientWidth, canvas.clientHeight);
+    const increment = 0.1;
+
+    const ctx = canvas.getContext("2d");
+    // ctx.fillRect(0, 0, rawWidth, rawHeight);
+    const imageData = ctx.getImageData(0, 0, rawWidth, rawHeight);
+
+    const navierFluid = new NavierFluid({
+      canvas,
+      rawWidth,
+      rawHeight,
+      increment,
+      imageData,
+    });
+
+    (function animate() {
+      // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // circlesArray.map((circle) => {
+      navierFluid.update();
+      // });
+
+      requestAnimationFrame(animate);
+    })();
+
+    window.addEventListener("mousemove", function (e) {
+      navierFluid.methods.updateMousePosition(e.clientX, e.clientY);
+      //console.log(navierData);
+    });
+  </script>
+</html>

@@ -1,0 +1,59 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PerlinNoise one</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+  </body>
+
+  <script src=""></script>
+  <script>
+    const canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    let radius = 0;
+    let velocity = 0.05;
+    // let x = Math.random() * 200;
+    // let x = Math.cos(val);
+    // let y = Math.random() * 200;
+    // let y = Math.sin(val);
+
+    let x = canvas.clientWidth / 2;
+    let y = canvas.clientHeight / 4;
+
+    const draw = () => {
+      // let x = Math.random(Math.cos(val)) * canvas.clientWidth;
+      // let y = Math.random(Math.sin(val)) * canvas.clientHeight;
+
+      // console.log(x);
+      // limpar ecran
+      // ctx.clearRect(0, 0, 400, 400);
+
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = "#FF0000";
+      ctx.fill();
+      ctx.closePath();
+
+      radius += velocity;
+      x += Math.cos(radius) * 5;
+      y += Math.sin(radius) * 5;
+    };
+
+    (function animate() {
+      draw();
+      ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.fillRect(0, 0, 400, 400);
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</html>

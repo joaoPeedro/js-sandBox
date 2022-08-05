@@ -1,0 +1,133 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PerlinNoise two</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"
+    integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script src=""></script>
+
+  <script>
+    let perlin = {
+      rand_vect: function () {
+        let theta = Math.random() * 2 * Math.PI;
+        return {x: Math.cos(theta), y: Math.sin(theta)};
+      },
+      dot_prod_grid: function (x, y, vx, vy) {
+        let g_vect;
+        let d_vect = {x: x - vx, y: y - vy};
+        if (this.gradients[[vx, vy]]) {
+          g_vect = this.gradients[[vx, vy]];
+        } else {
+          g_vect = this.rand_vect();
+          this.gradients[[vx, vy]] = g_vect;
+        }
+        return d_vect.x * g_vect.x + d_vect.y * g_vect.y;
+      },
+      smootherstep: function (x) {
+        return 6 * x ** 5 - 15 * x ** 4 + 10 * x ** 3;
+      },
+      interp: function (x, a, b) {
+        return a + this.smootherstep(x) * (b - a);
+      },
+      seed: function () {
+        this.gradients = {};
+        this.memory = {};
+      },
+      get: function (x, y) {
+        if (this.memory.hasOwnProperty([x, y])) return this.memory[[x, y]];
+        let xf = Math.floor(x);
+        let yf = Math.floor(y);
+        //interpolate
+        let tl = this.dot_prod_grid(x, y, xf, yf);
+        let tr = this.dot_prod_grid(x, y, xf + 1, yf);
+        let bl = this.dot_prod_grid(x, y, xf, yf + 1);
+        let br = this.dot_prod_grid(x, y, xf + 1, yf + 1);
+        let xt = this.interp(x - xf, tl, tr);
+        let xb = this.interp(x - xf, bl, br);
+        let v = this.interp(y - yf, xt, xb);
+        this.memory[[x, y]] = v;
+        return v;
+      },
+    };
+    perlin.seed();
+  </script>
+
+  <script>
+    let mouseX = 0;
+    let mouseY = 0;
+    let lastMouseX = mouseX;
+    let lastMouseY = mouseY;
+
+    window.addEventListener("mousemove", function (e) {
+      (mouseX = e.clientX | 0), (mouseY = e.clientY | 0);
+    });
+
+    const canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    const COLOR_SCALE = 205;
+    const INCREMENT = 0.9;
+    canvas.width = window.innerWidth / 20;
+    canvas.height = window.innerHeight / 20;
+    const rawWidth = canvas.width;
+    const rawHeight = canvas.height;
+
+    let imageData = ctx.getImageData(0, 0, rawWidth, rawHeight);
+
+    const calcValues = () => {};
+
+    function draw() {
+      // get pixels
+      let pixels = imageData.data;
+      console.log(pixels);
+
+      let yOffset = 0;
+      for (var x = 0; x < rawWidth; x++) {
+        let xOffset = 0;
+        for (var y = 0; y < rawHeight; y++) {
+          let index = (x + y * rawWidth) * 4;
+
+          // let random = Math.random() * 255;
+          // let random = parseInt(perlin.get(xOffset, yOffset) * COLOR_SCALE);
+          let random = noise(xOffset, yOffset) * COLOR_SCALE;
+
+          pixels[index + 0] = noise(xOffset, yOffset) * COLOR_SCALE * 2; // red
+          pixels[index + 1] = noise(xOffset, yOffset) * COLOR_SCALE; // green
+          // pixels[index + 2] = random; // blue
+          pixels[index + 3] = 255; // alpha
+
+          xOffset += INCREMENT;
+        }
+
+        yOffset += INCREMENT;
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    // const animate = () => {
+    //   draw();
+    //   // ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+    //   // ctx.fillRect(0, 0, 400, 400);
+    //   requestAnimationFrame(animate);
+    // };
+
+    // animate();
+  </script>
+</html>
