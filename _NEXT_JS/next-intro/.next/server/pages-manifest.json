@@ -1,0 +1,7 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/_error": "pages/_error.js",
+  "/page-pre-rendering/get-static-paths/[productId]": "pages/page-pre-rendering/get-static-paths/[productId].js",
+  "/": "pages/index.js"
+}
