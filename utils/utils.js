@@ -104,3 +104,23 @@ obj2.add("cenas");
 obj2.add("coisas");
 obj2.remove("batatas");
 console.log(obj2.getList());
+
+//load Images
+const frameCount = 62;
+const currentFrame = (index) =>
+  `https://conteudos.meo.pt/Style%20Library/Brand/resources/images/apps/5G/videos/pic/take5g${(
+    index + 1
+  )
+    .toString()
+    .padStart(5, "0")}.jpg`;
+
+const images = [];
+const videoTake5g = {
+  frame: 0,
+};
+
+for (let i = 0; i < frameCount; i++) {
+  const img = new Image();
+  img.src = currentFrame(i);
+  images.push(img);
+}
