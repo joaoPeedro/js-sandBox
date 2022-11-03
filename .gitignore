@@ -1,2 +1,6 @@
-*node_modules
-_NEXT_JS/05-pre-render/.next
+*/node_modules
+**/node_modules
+nextJsContentful/cms/.env.local
+**/.env.local
+**/.next
+
