@@ -72,7 +72,7 @@ console.log(str1.padStart(2, "0"));
 const fullNumber = "2034399002125581";
 const last4Digits = fullNumber.slice(-4);
 const maskedNumber = last4Digits.padStart(fullNumber.length, "*");
-console.log(maskedNumber);
+console.log({maskedNumber});
 // expected output: "************5581"
 
 /**
@@ -82,7 +82,7 @@ console.log(maskedNumber);
 function test() {
   let array = [];
   var obj = {
-    add: (item) => (array = [...array, item]),
+    add: (item) => (array.push(item)),
     remove: (item) => delete array[array.findIndex((str) => str === item)],
     getList: () => array.toString(),
   };
@@ -96,7 +96,7 @@ function test2() {
     add: (item) => (array = [...array, item]),
     remove: (item) =>
       array.splice(
-        array.findIndex((str) => str === item),
+        array.indexOf(item),
         1
       ),
     getList: () => array.toString(),
@@ -110,14 +110,14 @@ obj.add("batatas");
 obj.add("cenas");
 obj.add("coisas");
 obj.remove("batatas");
-console.log(obj.getList());
+console.log({objTest : obj.getList()});
 
 let obj2 = test2();
 obj2.add("batatas");
 obj2.add("cenas");
 obj2.add("coisas");
 obj2.remove("batatas");
-console.log(obj2.getList());
+console.log({obj2Test : obj2.getList()});
 
 //load Images
 const frameCount = 62;

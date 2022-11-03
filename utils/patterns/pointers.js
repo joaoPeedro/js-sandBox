@@ -1,3 +1,5 @@
+//to run file in console: node pointers
+
 /**
  * Write a function called sumZero wich accepsts a sorted Array of integers.
  * The function should find the first pair where the sum is 0.

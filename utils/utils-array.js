@@ -98,11 +98,11 @@ console.log("filter method return an array where element > 3000", returnVal);
 
 console.log(
   "Sort array crescente",
-  findsArray.sort((a, b) => b - a)
-);
-console.log(
-  "Sort array decrescente",
   findsArray.sort((a, b) => a - b)
+  );
+  console.log(
+    "Sort array decrescente",
+    findsArray.sort((a, b) => b - a)
 );
 
 // join Array

@@ -1,3 +1,5 @@
+//to run file in console: node sample
+
 /**
  * Write a function wich takes in a string and return conts of each character in the string
  */
@@ -65,3 +67,6 @@ const isAlphanumeric = (char) => {
 
 charCount("aabbcc");
 charCount2("aabasfadfsfckm psaokdm bcc");
+
+console.log( isAlphanumeric('#test'))
+console.log( isAlphanumeric('2#test'))
