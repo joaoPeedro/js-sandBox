@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import AddInput from "../AddInput";
 
-const mockedSetTodo = jest.fn();
+const mockedSetTodo = jest.fn(); // its a mocked function
 
 describe("AddInput", () => {
   test("should render input element", () => {
@@ -20,7 +20,7 @@ describe("AddInput", () => {
     expect(inputElement.value).toBe("Go Grocery Shopping");
   });
 
-  test("should be able to type into input", () => {
+  test("should be able to type into input and trigger function", () => {
     render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
     const inputElement = screen.getByPlaceholderText(/Add a new task here.../i);
     fireEvent.click(inputElement);

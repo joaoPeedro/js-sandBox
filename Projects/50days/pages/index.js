@@ -31,7 +31,15 @@ export default function Home() {
           <li>
             <Link href="/projects/expandingCards">expandingCards</Link>
           </li>
+          <li>
+            <Link href="/projects/steps">steps</Link>
+          </li>
+          <li>
+            <Link href="/projects/menuRotate">menu rotate</Link>
+          </li>
         </ul>
+
+        <br />
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
