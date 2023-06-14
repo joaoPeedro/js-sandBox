@@ -35,6 +35,7 @@ const MovieApp = ({
             <MovieItem {...movie} />
           </React.Fragment>
         ))}
+        <div>Pagination</div>
 
         {children}
       </section>

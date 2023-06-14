@@ -46,16 +46,23 @@ const MovieItem = ({
           <span style={{ fontSize: "0.6em" }}> {voteDecimal}</span>
         </span>
         <Image
+        alt={`${title}`}
           // src={"https://image.tmdb.org/t/p/w500" + backdrop_path}
           // src={`https://image.tmdb.org/t/p/w500${backdrop_path}`}
           src={`https://image.tmdb.org/t/p/w440_and_h660_face${backdrop_path}`}
           // src={`https://www.themoviedb.org/t/p/w440_and_h660_face${backdrop_path}`}
-          // layout={"responsive"}
-          // layout={"intrinsic"}
-          className={styles.loading_img}
-          onLoad={handlerClick}
+          //layout={"responsive"}
           width={440}
           height={660}
+          //layout={"intrinsic"}
+          className={styles.loading_img}
+          onLoad={handlerClick}
+          //fill
+                sizes="100%"
+      style={{
+        width: '100%',
+        height: 'auto',
+      }}
         />
       </div>
     </article>

@@ -1,6 +1,6 @@
 <template>
   <article class="picture">
-     {{photo}} 
+    <!-- {{photo}} -->
     <img :src='photo.img_src' :onload='loadedImg' decoding="async" loading='lazy' :alt='photo.name' />
     <div class="description">
       <h3>{{photo.camera.full_name}}</h3>

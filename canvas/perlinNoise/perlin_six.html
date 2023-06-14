@@ -12,7 +12,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="background: rebeccapurple">
     <canvas id="canvas"></canvas>
   </body>
 
@@ -46,7 +46,7 @@
     //   };
     // }
 
-    const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById('canvas');
     canvas.width = window.innerWidth / 14;
     canvas.height = window.innerHeight / 14;
     let rawWidth = canvas.width;
@@ -57,10 +57,10 @@
     let heightRatio = canvas.height / canvas.clientHeight;
     let canvasArea = rawWidth * rawHeight;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
     (function () {
-      window.addEventListener("mousemove", function (e) {
+      window.addEventListener('mousemove', function (e) {
         (navierData.MouseInitX = e.clientX),
           (navierData.MouseInitY = e.clientY);
         // console.log({

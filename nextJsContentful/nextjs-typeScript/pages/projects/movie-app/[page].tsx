@@ -26,13 +26,19 @@ const client = createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_KEY,
 });
 
+type ResClient = {
+  items: {
+    fields?: { title: string };
+  }[];
+};
+
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries.
 export async function getStaticProps(context) {
   console.log(context);
 
-  const resClient = await client.getEntries({
+  const resClient: ResClient = await client.getEntries({
     content_type: "recipe",
     // "fields.slug": 1, // para ir buscar apenas o item que corresponde a esta slug
   });

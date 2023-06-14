@@ -12,7 +12,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="background: orangered">
     <canvas id="canvas"></canvas>
   </body>
 
@@ -46,7 +46,7 @@
     //   };
     // }
 
-    const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById('canvas');
     canvas.width = window.innerWidth / 14;
     canvas.height = window.innerHeight / 14;
     let rawWidth = canvas.width;
@@ -57,7 +57,7 @@
     let heightRatio = canvas.height / canvas.clientHeight;
     let canvasArea = rawWidth * rawHeight;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
     // ctx.fillRect(0, 0, rawWidth, rawHeight);
 
@@ -94,7 +94,7 @@
           ? (valueDirection = 0)
           : valueDirection > 1
           ? (valueDirection = 1)
-          : "";
+          : '';
 
         return valueInit * (1 - valueDirection) + valueEnd * valueDirection;
       },
@@ -480,7 +480,7 @@
     };
     animate();
 
-    window.addEventListener("mousemove", function (e) {
+    window.addEventListener('mousemove', function (e) {
       (navierData.MouseInitX = e.clientX), (navierData.MouseInitY = e.clientY);
       // console.log({
       //   navierData.pressureGridInit,

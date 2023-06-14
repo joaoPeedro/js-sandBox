@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import Head from "next/head";
 import MovieApp from "../../../components/projects/movie-app/MovieApp";
+import Layout from "../../../components/projects/movie-app/Layout";
 
 const getMovies = async (page) => {
   const res = await fetch(
@@ -32,34 +33,9 @@ const index = ({ page }) => {
   );
 };
 
-export const getStaticPaths = async () => {
-  return {
-    paths: [
-      { params: { page: "1" } },
-      { params: { page: "2" } },
-      { params: { page: "3" } },
-    ],
-    /**
-     * false - n renderiza novas paginas
-     * true - precisa de uma fallback page enquanto renderiza novas paginas
-     * "blocking", renderiza novas pags mas sem falback
-     */
-    fallback: true,
-  };
+index.getLayout = function getLayout(page: ReactElement) {
+  return <Layout userNmae={""}> {page}</Layout>;
 };
 
-// This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries.
-export async function getStaticProps(context) {
-  console.log(context);
-
-  return {
-    props: {
-      page: context.params.page,
-    },
-    revalidate: 60 * 60 * 2,
-  };
-}
 
 export default index;
